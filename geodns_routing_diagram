@@ -1,0 +1,12 @@
+// GeoDNS Routing
+digraph {
+	NA [label="User in North America"]
+	EU [label="User in Europe"]
+	AS [label="User in Asia"]
+	ServerNA [label="Server in North America"]
+	ServerEU [label="Server in Europe"]
+	ServerAS [label="Server in Asia"]
+	NA -> ServerNA [label="GeoDNS routes to nearest server"]
+	EU -> ServerEU [label="GeoDNS routes to nearest server"]
+	AS -> ServerAS [label="GeoDNS routes to nearest server"]
+}
