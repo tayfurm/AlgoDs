@@ -1,39 +1,31 @@
-import graphviz
+# [[1,2], [2,4], [1,7], [9,12]]  --> [1,7] [9,12]
+# [[0,7],[5,9],[7,8][11,12],[-2,-1]] --> [-2,-1] [0,9] [11,12]
 
-# Create a new directed graph
-dot = graphviz.Digraph(comment='Full Web Application Architecture')
+# [[-2,-1],[0,7],[5,9],[8,9][11,12]]
 
-# Add nodes for each component
-dot.node('U', 'User')
-dot.node('R', 'Recursive DNS Resolver (ISP/Public)')
-dot.node('G', 'GeoDNS (Authoritative DNS)')
-dot.node('C', 'CDN (e.g., Cloudflare)')
-dot.node('L', 'Load Balancer')
-dot.node('A1', 'Application Server 1')
-dot.node('A2', 'Application Server 2')
-dot.node('DB', 'Database')
+def combine_intervals(arr):
+    # step 1: sort
+    arr.sort()
+    
+    # add new intevals by checking boundries
+    if not arr:
+        return []
+    
+    res = [arr[0]]
 
-# Add edges to show the flow of a user request
-dot.edge('U', 'R', 'DNS Request')
-dot.edge('R', 'G', 'Query Authoritative DNS')
-dot.edge('G', 'R', 'Return Geo-based IP')
-dot.edge('R', 'U', 'Return IP to User')
-dot.edge('U', 'C', 'Request to CDN')
-dot.edge('C', 'L', 'Forward to Load Balancer')
-dot.edge('L', 'A1', 'Route to App Server 1')
-dot.edge('L', 'A2', 'Route to App Server 2')
-dot.edge('A1', 'DB', 'Query Database')
-dot.edge('A2', 'DB', 'Query Database')
-dot.edge('DB', 'A1', 'Return Data')
-dot.edge('DB', 'A2', 'Return Data')
-dot.edge('A1', 'L', 'Return to Load Balancer')
-dot.edge('A2', 'L', 'Return to Load Balancer')
-dot.edge('L', 'C', 'Return to CDN')
-dot.edge('C', 'U', 'Return to User')
+    for i in range(1, len(arr)):
+        intr = arr[i]
+        # check if new interval comes after a gap
+        if intr[0] > res[-1][1]:
+            res.append(intr)
+        # if not unite
+        elif intr[1] > res[-1][1]:
+            res[-1][1] = intr[1]
+        
+    return res
 
-# Save the diagram as a PDF file
-dot.render('web_application_architecture', format='pdf')
+arr = [[0,7],[5,9],[7,8],[11,12],[-2,-1]] 
+print(combine_intervals(arr))
 
-# Print a success message
-print("The diagram of the full web application architecture has been successfully created and saved as 'web_application_architecture.pdf'.")
-
+arr = [[1,2], [2,4], [1,7], [9,12]]
+print(combine_intervals(arr))
